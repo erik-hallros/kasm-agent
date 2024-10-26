@@ -1,0 +1,67 @@
+agent:
+  auto_generate_kasm_docker_networks: false
+  default_host_key: 1234
+  disk_usage_limit: 0.9
+  docker_async_script_timeout: 900
+  docker_port_listen_addr: localhost
+  docker_script_timeout: 180
+  forward_logs_to_manager: true
+  heartbeat_interval: 30000
+  images_interval: 3600
+  log_container_stats: false
+  log_heartbeat_data: false
+  max_concurrent_docker_pulls: 2
+  nginx_container_dir: /etc/nginx/conf.d/containers.d/
+  persist_config_interval: 100000
+  persist_config_updates: true
+  port: 4444
+  provider: hardware
+  public_hostname: agent1.cluster.local
+  public_port: 443
+  remove_failed_containers: true
+  retention_period: '24'
+  server_id: dfdd1472-dcaf-41c8-beda-1b7bf44b9d40
+  starting_nginx_port: 5971
+  type: host
+  validate_images: true
+logging:
+  agent:
+    formatters:
+      pythonjsonlogger:
+        (): pythonjsonlogger.jsonlogger.JsonFormatter
+        fmt: '%(asctime) %(name) %(processName) %(filename)  %(funcName) %(levelname)
+          %(lineno) %(module) %(threadName) %(message)'
+        timestamp: true
+      standard:
+        format: '%(asctime)s [%(levelname)s] %(name)s: %(message)s'
+    handlers:
+      stream:
+        class: logging.StreamHandler
+        formatter: standard
+        level: DEBUG
+      syslog:
+        class: logging.handlers.SysLogHandler
+        formatter: pythonjsonlogger
+        level: DEBUG
+    loggers:
+      ? ''
+      : handlers:
+        - stream
+        - syslog
+        level: DEBUG
+        propagate: true
+      tornado:
+        level: INFO
+    version: 1
+manager:
+  client_cert: /srv/provision_agent/client_cert.pem
+  config_path: /manager_api/api/v1/agent_config
+  heartbeat_path: /manager_api/api/v1/heartbeat
+  hostnames:
+  - kasm.cluster.local
+  - $request_host$
+  images_path: /manager_api/api/v1/images
+  public_port: 443
+  scheme: https
+  server_cert: /srv/provision_agent/server_cert.pem
+  token: nBa83Xpz1LzSvZ1YhWHBjFMua4
